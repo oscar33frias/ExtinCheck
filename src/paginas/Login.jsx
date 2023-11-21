@@ -1,4 +1,4 @@
-import { Link ,useNavigate,} from "react-router-dom";
+import { useNavigate,} from "react-router-dom";
 import { useState } from "react";
 import Alerta from "../components/Alerta";
 import clienteAxios from "../../config/clienteAxios";
@@ -29,7 +29,7 @@ const Login = () => {
       const {data} = await clienteAxios.post('/usuarios/login', {email, password});
       localStorage.setItem("token", data.token);
       setAuth(data);
-     navigate('/extintores');
+     navigate('/extintorescheck');
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
@@ -89,20 +89,7 @@ const {msg} = alerta;
           className="bg-red-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-red-800 transition-colors duration-200"
         />
       </form>
-      <nav className="lg:flex lg:justify-between">
-        <Link
-          to="/registrar"
-          className="block font-bold text-center my-5 text-yellow-500 uppercase text-sm hover:cursor-pointer hover:bg-red-800 transition-colors duration-200"
-        >
-          ¿No tienes cuenta? Regístrate
-        </Link>
-        <Link
-          to="/olvide-password"
-          className="block font-bold text-center my-5 text-yellow-500 uppercase text-sm hover:cursor-pointer hover:bg-red-800 transition-colors duration-200"
-        >
-          Olvidé mi password
-        </Link>
-      </nav>
+     
     </div>
   </div>
   );
