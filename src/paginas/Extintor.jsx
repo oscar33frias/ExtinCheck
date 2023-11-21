@@ -1,10 +1,9 @@
 import useAdmin from "../hooks/useAdmin";
-import { useEffect ,useRef} from "react";
+import { useEffect } from "react";
 import ModalFormularioExtintor from "../components/ModalFormularioExtintor";
-import ModalEliminarCheckList from "../components/ModalEliminarCheckList";
 import CheckList from "../components/CheckList";
 import Alerta from "../components/Alerta";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useExtintores from "../hooks/useExtintores";
 
 const Extintor = () => {
@@ -14,7 +13,6 @@ const Extintor = () => {
     obtenerExtintor,
     extintor,
     cargando,
-    handleModalExtintor,
     checkLists,
     alerta,
   } = useExtintores();
@@ -26,7 +24,7 @@ const Extintor = () => {
   }, []);
 
   
-  const { codigo ,id} = extintor;
+  const { codigo } = extintor;
   const { msg } = alerta;
 
   return cargando ? (
@@ -75,7 +73,6 @@ const Extintor = () => {
       </div>
 
       <ModalFormularioExtintor />
-      <ModalEliminarCheckList />
     </>
   );
 };

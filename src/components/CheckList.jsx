@@ -4,7 +4,7 @@ import useExtintores from "../hooks/useExtintores";
 import useAdmin from "../hooks/useAdmin";
 
 const CheckList = ({ checklist }) => {
-  const { handleModalEditarCheckList, handleModalEliminarCheckList } =
+  const { handleModalEditarCheckList } =
     useExtintores();
   const {
     id,

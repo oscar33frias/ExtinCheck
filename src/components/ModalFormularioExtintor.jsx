@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import useExtintores from "../hooks/useExtintores";
 import Alerta from "./Alerta";
 import { useParams } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const PRIORIDAD = ["Baja", "Media", "Alta"];
 const CHECK = ["Si", "No"];
@@ -37,6 +38,10 @@ const ModalFormularioCheckList = () => {
     submitCheckList,
     checkList,
   } = useExtintores();
+
+  const {auth} = useAuth();
+  const nameTrabajador = auth.nombre;
+  
 
   useEffect(() => {
     if (checkList.id) {
@@ -111,6 +116,7 @@ const ModalFormularioCheckList = () => {
       fechaUltimaRecarga,
       fechaProximaRecarga,
       extintorId: params.id,
+      nameTrabajador
     });
     setId("");
 
