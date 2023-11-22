@@ -1,6 +1,5 @@
 import { useState, createContext, useEffect } from "react";
 import clienteAxios from "../../config/clienteAxios";
-import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
 const ExtintoresContext = createContext();
@@ -65,6 +64,7 @@ const ExtintoresProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios.get(`/extintores/${id}`, config);
+      console.log(data)
       setExtintor(data.extintor);
       setCheckLists(data.checklists);
       setColaboradores(data.colaboradores);
@@ -78,11 +78,12 @@ const ExtintoresProvider = ({ children }) => {
 
   const submitCheckList = async (checklist) => {
     if (checklist.id) {
-      await editarCheckList(checklist);
+    console.log("🚀 ~ file: ExtintoresProvider.jsx:81 ~ submitCheckList ~ checklist:", checklist)
     } else {
       await crearCheckList(checklist);
     }
   };
+
 
   const crearCheckList = async (checklist) => {
     try {
@@ -106,40 +107,15 @@ const ExtintoresProvider = ({ children }) => {
       console.log(error);
     }
   };
-  const editarCheckList = async (checklist) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const { data } = await clienteAxios.put(
-        `/checklist/${checklist.id}`,
-        checklist,
-        config
-      );
-
-      //TODO ACTUALIZAR EL DOM
-      setAlerta({});
-      setModalFormularioExtintor(false);
-
-      setCheckLists(
-        checkLists.map((check) => (check.id === data.id ? data : check))
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleModalEditarCheckList = (checklist) => {
     setCheckList(checklist);
     setModalFormularioExtintor(true);
   };
 
+  const handleModalExtintor = () => {
+    setModalFormularioExtintor(!modalFormularioExtintor);
+    setCheckList({});
+  };
 
 
 
@@ -157,7 +133,7 @@ const ExtintoresProvider = ({ children }) => {
         checkLists,
         handleModalEditarCheckList,
         checkList,
-      
+      handleModalExtintor,
         colaboradores,
         markers,
         setMarkers,

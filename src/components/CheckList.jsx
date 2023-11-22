@@ -21,9 +21,9 @@ const CheckList = ({ checklist }) => {
     fecha_checklist,
     prioridad,
     estado,
+    usuario
   } = checklist;
 
-  const admin = useAdmin();
   return (
     <div className="border p-6 bg-white shadow-lg rounded-xl mb-4">
       <div className="flex justify-between items-start flex-wrap mb-5">
@@ -72,11 +72,14 @@ const CheckList = ({ checklist }) => {
             <p className="text-sm font-bold ">
               Prioridad <span className=" text-green-600">{prioridad}</span>
             </p>
+            <p className="text-sm font-bold ">
+              Completado por: <span className=" text-blue-600">{usuario}</span>
+            </p>
           </div>
         </div>
 
         <div className="flex flex-col mt-5">
-          {admin && (
+        
             <div className="flex space-x-3">
               <button
                 className="bg-indigo-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-indigo-700 transition-colors duration-300"
@@ -85,7 +88,7 @@ const CheckList = ({ checklist }) => {
                 Completar
               </button>
               {estado ? (
-                <button className="bg-sky-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-sky-700 transition-colors duration-300">
+                <button className="bg-green-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-green-700 transition-colors duration-300">
                   Completa
                 </button>
               ) : (
@@ -95,7 +98,7 @@ const CheckList = ({ checklist }) => {
               )}
               
             </div>
-          )}
+   
 
           <div className="flex justify-center">
             <img

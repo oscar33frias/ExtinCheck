@@ -39,9 +39,8 @@ const ModalFormularioCheckList = () => {
     checkList,
   } = useExtintores();
 
-  const {auth} = useAuth();
-  const nameTrabajador = auth.nombre;
-  
+  const { auth } = useAuth();
+
 
   useEffect(() => {
     if (checkList.id) {
@@ -116,7 +115,7 @@ const ModalFormularioCheckList = () => {
       fechaUltimaRecarga,
       fechaProximaRecarga,
       extintorId: params.id,
-      nameTrabajador
+      usuario: auth.nombre,
     });
     setId("");
 
@@ -416,7 +415,6 @@ const ModalFormularioCheckList = () => {
                       </select>
                     </div>
 
-
                     <div>
                       <label
                         className=" text-gray-700 uppercase font-bold text-sm"
@@ -429,7 +427,9 @@ const ModalFormularioCheckList = () => {
                         id="fecha-ultimo-hidrostatica"
                         className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={fechaUltimaHidrostatica}
-                        onChange={(e) => setFechaUltimaHidrostatica(e.target.value)}
+                        onChange={(e) =>
+                          setFechaUltimaHidrostatica(e.target.value)
+                        }
                       />
                     </div>
 
@@ -445,7 +445,9 @@ const ModalFormularioCheckList = () => {
                         id="fecha-proxima-hidrostatica"
                         className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={fechaProximaHidrostatica}
-                        onChange={(e) => setFechaProximaHidrostatica(e.target.value)}
+                        onChange={(e) =>
+                          setFechaProximaHidrostatica(e.target.value)
+                        }
                       />
                     </div>
 
@@ -461,7 +463,9 @@ const ModalFormularioCheckList = () => {
                         id="fecha-ultima-recarga"
                         className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={fechaUltimaRecarga}
-                        onChange={(e) => setFechaUltimaHidrostatica(e.target.value)}
+                        onChange={(e) =>
+                          setFechaUltimaHidrostatica(e.target.value)
+                        }
                       />
                     </div>
 
