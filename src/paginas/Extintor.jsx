@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import useAdmin from "../hooks/useAdmin";
+import { useEffect ,useRef} from "react";
 import ModalFormularioExtintor from "../components/ModalFormularioExtintor";
 import CheckList from "../components/CheckList";
 import Alerta from "../components/Alerta";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import useExtintores from "../hooks/useExtintores";
 
 const Extintor = () => {
@@ -12,18 +13,20 @@ const Extintor = () => {
     obtenerExtintor,
     extintor,
     cargando,
+    handleModalExtintor,
     checkLists,
     alerta,
-    handleModalExtintor
   } = useExtintores();
 
+  const admin = useAdmin();
 
   useEffect(() => {
     obtenerExtintor(params.id);
   }, []);
 
-  
-  const { codigo} = extintor;
+
+
+  const { codigo ,} = extintor;
   const { msg } = alerta;
 
   return cargando ? (
@@ -31,11 +34,13 @@ const Extintor = () => {
   ) : (
     <>
       <div className=" flex justify-between">
-      
+    
         <h1 className=" font-black text-4xl">{codigo}</h1>
-       
+
+   
       </div>
-      <button
+
+        <button
           onClick={handleModalExtintor}
           className="text-sm px-5 py-3 w-full md:w-auto rounded-lg uppercase 
       font-bold bg-green-400 text-white text-center mt-5 flex gap-2
@@ -57,6 +62,8 @@ const Extintor = () => {
           </svg>
           Nuevo CheckList
         </button>
+
+
       <p className=" font-bold text-xl mt-10"> CheckList del Extintor</p>
       {msg && <Alerta alerta={alerta} />}
       <div className=" bg-white shadow mt-10 rounded-lg">
