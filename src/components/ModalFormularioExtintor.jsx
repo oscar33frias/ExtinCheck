@@ -1,13 +1,13 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useExtintores from "../hooks/useExtintores";
-import Alerta from "./Alerta";
 import { useParams } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const PRIORIDAD = ["Baja", "Media", "Alta"];
 const CHECK = ["Si", "No"];
 const CONDICION = ["Buena", "Dañado"];
+const ESTADO = ["Pendiente", "Completo"];
 const ModalFormularioCheckList = () => {
   const [codigo, setCodigo] = useState("");
   const [obstruido, setObstruido] = useState("");
@@ -23,24 +23,19 @@ const ModalFormularioCheckList = () => {
   const [fechaProximaHidrostatica, setFechaProximaHidrostatica] = useState("");
   const [fechaUltimaRecarga, setFechaUltimaRecarga] = useState("");
   const [fechaProximaRecarga, setFechaProximaRecarga] = useState("");
-  const [fechaCheckList, setFechaCheckList] = useState("");
-
   const [prioridad, setPrioridad] = useState("");
   const [id, setId] = useState("");
+  const [estado, setEstado] = useState("");
 
   const params = useParams();
 
   const {
     modalFormularioExtintor,
     handleModalExtintor,
-    mostrarAlerta,
-    alerta,
+
     submitCheckList,
     checkList,
   } = useExtintores();
-
-  const { auth } = useAuth();
-
 
   useEffect(() => {
     if (checkList.id) {
@@ -55,16 +50,16 @@ const ModalFormularioCheckList = () => {
       setMangera(checkList.manguera);
       setBoquilla(checkList.boquilla);
       setEtiqueta(checkList.etiqueta);
-      setFechaCheckList(checkList.fecha_checklist?.split("T")[0]);
       setPrioridad(checkList.prioridad);
       setFechaUltimaHidrostatica(
-        checkList.fecha_ultima_hidrostatica?.split("T")[0]
+        checkList.fechaUltimaHidrostatica?.split("T")[0]
       );
       setFechaProximaHidrostatica(
-        checkList.fecha_proxima_hidrostatica?.split("T")[0]
+        checkList.fechaProximaHidrostatica?.split("T")[0]
       );
-      setFechaUltimaRecarga(checkList.fecha_ultima_recarga?.split("T")[0]);
-      setFechaProximaRecarga(checkList.fecha_proxima_recarga?.split("T")[0]);
+      setFechaUltimaRecarga(checkList.fechaUltimaRecarga?.split("T")[0]);
+      setFechaProximaRecarga(checkList.fechaProximaRecarga?.split("T")[0]);
+      setEstado(checkList.estado);
       return;
     }
     setId("");
@@ -78,24 +73,68 @@ const ModalFormularioCheckList = () => {
     setMangera("");
     setBoquilla("");
     setEtiqueta("");
-    setFechaCheckList("");
     setPrioridad("");
     setFechaUltimaHidrostatica("");
     setFechaProximaHidrostatica("");
     setFechaUltimaRecarga("");
     setFechaProximaRecarga("");
+    setEstado("");
   }, [checkList]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([codigo, prioridad].includes("")) {
-      mostrarAlerta({
-        msg: "Codigo y prioridad son obligatorios ",
-        error: true,
-      });
-      return;
+    if (
+      [
+        codigo,
+        obstruido,
+        instrucciones,
+        senalamiento,
+        manometro,
+        sello,
+        condFisica,
+        manguera,
+        boquilla,
+        etiqueta,
+        fechaUltimaHidrostatica,
+        fechaProximaHidrostatica,
+        fechaUltimaRecarga,
+        fechaProximaRecarga,
+        prioridad,
+
+        estado,
+      ].includes("")
+    ) {
+      const campos = {
+        codigo,
+        obstruido,
+        instrucciones,
+        senalamiento,
+        manometro,
+        sello,
+        condFisica,
+        manguera,
+        boquilla,
+        etiqueta,
+        fechaUltimaHidrostatica,
+        fechaProximaHidrostatica,
+        fechaUltimaRecarga,
+        fechaProximaRecarga,
+
+        prioridad,
+        estado,
+      };
+      for (let campo in campos) {
+        if (campos[campo] === "") {
+          toast.error(`El campo ${campo} es obligatorio`, {
+            position: toast.POSITION.BOTTOM_CENTER,
+          });
+
+          return;
+        }
+      }
     }
+
     await submitCheckList({
       id,
       codigo,
@@ -108,14 +147,14 @@ const ModalFormularioCheckList = () => {
       manguera,
       boquilla,
       etiqueta,
-      fechaCheckList,
+
       prioridad,
       fechaUltimaHidrostatica,
       fechaProximaHidrostatica,
       fechaUltimaRecarga,
       fechaProximaRecarga,
       extintorId: params.id,
-      usuario: auth.nombre,
+      estado,
     });
     setId("");
 
@@ -129,15 +168,15 @@ const ModalFormularioCheckList = () => {
     setMangera("");
     setBoquilla("");
     setEtiqueta("");
-    setFechaCheckList("");
+
     setPrioridad("");
     setFechaUltimaHidrostatica("");
     setFechaProximaHidrostatica("");
     setFechaUltimaRecarga("");
     setFechaProximaRecarga("");
+    setEstado("");
   };
 
-  const { msg } = alerta;
   return (
     <Transition.Root show={modalFormularioExtintor} as={Fragment}>
       <Dialog
@@ -207,7 +246,6 @@ const ModalFormularioCheckList = () => {
                     {id ? "Editar CheckList" : "Crear CheckList"}
                     Crear CheckList
                   </Dialog.Title>
-                  {msg && <Alerta alerta={alerta} />}
                   <form className=" m-10 " onSubmit={handleSubmit}>
                     <div>
                       <label
@@ -463,9 +501,7 @@ const ModalFormularioCheckList = () => {
                         id="fecha-ultima-recarga"
                         className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={fechaUltimaRecarga}
-                        onChange={(e) =>
-                          setFechaUltimaHidrostatica(e.target.value)
-                        }
+                        onChange={(e) => setFechaUltimaRecarga(e.target.value)}
                       />
                     </div>
 
@@ -482,22 +518,6 @@ const ModalFormularioCheckList = () => {
                         className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                         value={fechaProximaRecarga}
                         onChange={(e) => setFechaProximaRecarga(e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        className=" text-gray-700 uppercase font-bold text-sm"
-                        htmlFor="fecha-creacion"
-                      >
-                        Fecha de Revision
-                      </label>
-                      <input
-                        type="date"
-                        id="fecha-creacion"
-                        className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-                        value={fechaCheckList}
-                        onChange={(e) => setFechaCheckList(e.target.value)}
                       />
                     </div>
 
@@ -522,10 +542,32 @@ const ModalFormularioCheckList = () => {
                         ))}
                       </select>
                     </div>
+
+                    <div>
+                      <label
+                        className=" text-gray-700 uppercase font-bold text-sm"
+                        htmlFor="prioridad"
+                      >
+                        Estado
+                      </label>
+                      <select
+                        type="estado"
+                        id="estado"
+                        className=" border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                        value={estado}
+                        onChange={(e) => setEstado(e.target.value)}
+                      >
+                        <option value="">Selecionar</option>
+
+                        {ESTADO.map((opcion) => (
+                          <option key={opcion}>{opcion}</option>
+                        ))}
+                      </select>
+                    </div>
                     <input
                       type="submit"
                       className="bg-yellow-500 w-full p-3 text-white uppercase font-bold block mt-5 text-center rounded-lg hover:bg-yellow-600 transition-colors duration-300"
-                      value={id ? "Completar" : "Crear CheckList"}
+                      value={id ? "Editar CheckList" : "Crear CheckList"}
                     />
                   </form>
                 </div>

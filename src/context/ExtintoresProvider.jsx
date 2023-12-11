@@ -2,6 +2,7 @@ import { useState, createContext, useEffect } from "react";
 import clienteAxios from "../../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const ExtintoresContext = createContext();
 
@@ -196,6 +197,7 @@ const ExtintoresProvider = ({ children }) => {
     }
   };
 
+
   const crearCheckList = async (checklist) => {
     try {
       const token = localStorage.getItem("token");
@@ -207,13 +209,14 @@ const ExtintoresProvider = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      checklist.usuario = auth.nombre;
 
       const { data } = await clienteAxios.post("/checklist", checklist, config);
 
       setCheckLists([...checkLists, data]);
 
-      setAlerta({});
       setModalFormularioExtintor(false);
+      toast.success("CheckList creado correctamente");
     } catch (error) {
       console.log(error);
     }

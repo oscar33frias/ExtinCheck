@@ -5,6 +5,7 @@ import CheckList from "../components/CheckList";
 import Alerta from "../components/Alerta";
 import { useParams, Link } from "react-router-dom";
 import useExtintores from "../hooks/useExtintores";
+import { ToastContainer } from "react-toastify";
 
 const Extintor = () => {
   const params = useParams();
@@ -18,7 +19,6 @@ const Extintor = () => {
     alerta,
   } = useExtintores();
 
-  const admin = useAdmin();
 
   useEffect(() => {
     obtenerExtintor(params.id);
@@ -33,6 +33,8 @@ const Extintor = () => {
     "..."
   ) : (
     <>
+            <ToastContainer></ToastContainer>
+
       <div className=" flex justify-between">
     
         <h1 className=" font-black text-4xl">{codigo}</h1>

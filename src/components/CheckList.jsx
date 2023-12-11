@@ -2,34 +2,41 @@ import formatearFecha from "../helpers/formatearFecha";
 import imagenExtinto from "../img/extintor-preview.png";
 import useExtintores from "../hooks/useExtintores";
 import useAdmin from "../hooks/useAdmin";
+import { useEffect } from "react";
 
 const CheckList = ({ checklist }) => {
-  const { handleModalEditarCheckList } =
+  const { handleModalEditarCheckList, handleModalEliminarCheckList } =
     useExtintores();
   const {
-    id,
-    codigo,
-    obstruido,
-    instrucciones,
-    senalamiento,
-    manometro,
-    sello,
-    condFisica,
-    manguera,
     boquilla,
-    etiqueta,
-    fecha_checklist,
-    prioridad,
+    fechaCheckList,
+    condFisica,
     estado,
-    usuario
+    etiqueta,
+
+    fechaProximaHidrostatica,
+    fechaProximaRecarga,
+    fechaUltimaHidrostatica,
+    fechaUltimaRecarga,
+
+    instrucciones,
+    manguera,
+    manometro,
+    obstruido,
+    prioridad,
+    sello,
+    senalamiento,
+    usuario,
   } = checklist;
 
+  
+  const admin = useAdmin();
   return (
     <div className="border p-6 bg-white shadow-lg rounded-xl mb-4">
       <div className="flex justify-between items-start flex-wrap mb-5">
         <div className="flex-grow pr-5">
           <p className="text-3xl font-bold mb-5">
-            {formatearFecha(fecha_checklist)}
+            {formatearFecha(fechaCheckList)}
           </p>
           <div className="grid grid-cols-2 gap-y-3 gap-x-8">
             <p className="text-sm font-bold">
@@ -62,11 +69,43 @@ const CheckList = ({ checklist }) => {
             <p className="text-sm font-bold ">
               Etiqueta <span className=" text-green-600">{etiqueta}</span>
             </p>
+
             <p className="text-sm font-bold ">
-              Fecha Esperada de Revision
+              Fecha Del Checklist
               <span className=" text-green-600">
                 {" "}
-                {formatearFecha(fecha_checklist)}
+                {formatearFecha(fechaCheckList)}
+              </span>
+            </p>
+
+            <p className="text-sm font-bold ">
+              Próxima Fecha Hidrostática
+              <span className=" text-green-600">
+                {" "}
+                {formatearFecha(fechaProximaHidrostatica)}
+              </span>
+            </p>
+
+            <p className="text-sm font-bold ">
+              Próxima Fecha de Recarga
+              <span className=" text-green-600">
+                {" "}
+                {formatearFecha(fechaProximaRecarga)}
+              </span>
+            </p>
+
+            <p className="text-sm font-bold ">
+              Última Fecha Hidrostática{" "}
+              <span className=" text-green-600">
+                {" "}
+                {formatearFecha(fechaUltimaHidrostatica)}
+              </span>
+            </p>
+            <p className="text-sm font-bold ">
+              Última Fecha de Recarga{" "}
+              <span className=" text-green-600">
+                {" "}
+                {formatearFecha(fechaUltimaRecarga)}
               </span>
             </p>
             <p className="text-sm font-bold ">
@@ -79,16 +118,16 @@ const CheckList = ({ checklist }) => {
         </div>
 
         <div className="flex flex-col mt-5">
-        
+          {admin && (
             <div className="flex space-x-3">
               <button
                 className="bg-indigo-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-indigo-700 transition-colors duration-300"
                 onClick={() => handleModalEditarCheckList(checklist)}
               >
-                Completar
+                Editar
               </button>
-              {estado ? (
-                <button className="bg-green-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-green-700 transition-colors duration-300">
+              {estado==="Completo" ? (
+                <button className="bg-sky-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-sky-700 transition-colors duration-300">
                   Completa
                 </button>
               ) : (
@@ -96,9 +135,14 @@ const CheckList = ({ checklist }) => {
                   Incompleta
                 </button>
               )}
-              
+              <button
+                className="bg-red-600 px-5 py-2 text-white uppercase font-semibold text-sm rounded-full shadow-md hover:bg-red-700 transition-colors duration-300"
+                onClick={() => handleModalEliminarCheckList(checklist)}
+              >
+                Eliminar
+              </button>
             </div>
-   
+          )}
 
           <div className="flex justify-center">
             <img
