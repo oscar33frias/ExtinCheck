@@ -1,11 +1,10 @@
-import useAdmin from "../hooks/useAdmin";
 import { useEffect ,useRef} from "react";
 import ModalFormularioExtintor from "../components/ModalFormularioExtintor";
 import CheckList from "../components/CheckList";
 import Alerta from "../components/Alerta";
 import { useParams, Link } from "react-router-dom";
 import useExtintores from "../hooks/useExtintores";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer,toast } from "react-toastify";
 
 const Extintor = () => {
   const params = useParams();
@@ -26,6 +25,8 @@ const Extintor = () => {
 
 
 
+// Mostrar una notificación
+toast('Esta es una notificación');
   const { codigo ,} = extintor;
   const { msg } = alerta;
 
@@ -33,10 +34,9 @@ const Extintor = () => {
     "..."
   ) : (
     <>
-            <ToastContainer></ToastContainer>
 
-      <div className=" flex justify-between">
-    
+<div className="flex flex-col md:flex-row justify-between items-center">
+    <ToastContainer></ToastContainer>
         <h1 className=" font-black text-4xl">{codigo}</h1>
 
    
