@@ -1,10 +1,11 @@
-import { useEffect ,useRef} from "react";
+import { useEffect} from "react";
 import ModalFormularioExtintor from "../components/ModalFormularioExtintor";
 import CheckList from "../components/CheckList";
 import Alerta from "../components/Alerta";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useExtintores from "../hooks/useExtintores";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Extintor = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ const Extintor = () => {
 
 
 // Mostrar una notificación
-toast('Esta es una notificación');
+
   const { codigo ,} = extintor;
   const { msg } = alerta;
 
